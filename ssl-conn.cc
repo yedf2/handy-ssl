@@ -1,6 +1,5 @@
 #include "ssl-conn.h"
 #include <assert.h>
-#include <logging.h>
 #include <poll.h>
 
 //#define SSL_ERROR_NONE 0
@@ -79,10 +78,10 @@ int SSLConn::handleHandshake(const TcpConnPtr& con) {
         int r = SSL_set_fd(ssl_, channel_->fd());
         fatalif(!r, "SSL_set_fd failed");
         if (isClient_) {
-            trace("SSL_set_connect_state for channel %ld fd %d", channel_->id(), channel_->fd());
+            trace("SSL_set_connect_state for channel %ld fd %d", (long)channel_->id(), channel_->fd());
             SSL_set_connect_state(ssl_);
         } else {
-            trace("SSL_set_accept_state for channel %ld fd %d", channel_->id(), channel_->fd());
+            trace("SSL_set_accept_state for channel %ld fd %d", (long)channel_->id(), channel_->fd());
             SSL_set_accept_state(ssl_);
         }
     }

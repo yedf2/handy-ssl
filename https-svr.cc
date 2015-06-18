@@ -1,8 +1,7 @@
-#include <handy.h>
-#include <logging.h>
-#include <daemon.h>
+#include <handy/handy.h>
+#include <handy/daemon.h>
 #include "ssl-conn.h"
-#include <http.h>
+#include <handy/http.h>
 
 using namespace handy;
 using namespace std;
@@ -12,7 +11,9 @@ int main(int argc, const char* argv[]) {
     EventBase ebase;
     Signal::signal(SIGINT, [&]{ ebase.exit(); });
     SSLConn::setSSLCertKey("server.pem", "server.pem");
-    HttpServer ss(&ebase, "0.0.0.0", 1002);
+    HttpServer ss(&ebase);
+    int r = ss.bind("0.0.0.0", 1002);
+    exitif(r, "bind failed %d %s", errno, strerror(errno));
     ss.setConnType<SSLConn>();
     ss.onGet("/hello", [](const HttpConnPtr& con) {
         HttpResponse resp;

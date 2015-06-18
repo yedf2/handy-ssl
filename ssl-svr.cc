@@ -1,6 +1,5 @@
-#include <handy.h>
-#include <logging.h>
-#include <daemon.h>
+#include <handy/handy.h>
+#include <handy/daemon.h>
 #include "ssl-conn.h"
 
 using namespace handy;
@@ -11,14 +10,18 @@ int main(int argc, const char* argv[]) {
     EventBase ebase;
     Signal::signal(SIGINT, [&]{ ebase.exit(); });
     SSLConn::setSSLCertKey("server.pem", "server.pem");
-    TcpServer ss(&ebase, "0.0.0.0", 1002);
+    TcpServer ss(&ebase);
+    int r = ss.bind("0.0.0.0", 1002);
+    exitif(r, "bind failed %d %s", errno, strerror(errno));
     ss.onConnCreate([]{ return TcpConnPtr(new SSLConn); });
     ss.onConnRead([](const TcpConnPtr& con) {
         con->send(con->getInput());
         con->getInput().clear();
     });
 
-    TcpServer ts(&ebase, "0.0.0.0", 1003);
+    TcpServer ts(&ebase);
+    r = ts.bind("0.0.0.0", 1003);
+    exitif(r, "bind failed %d %s", errno, strerror(errno));
     ts.onConnRead([](const TcpConnPtr& con) {
         con->send(con->getInput());
         con->getInput().clear();

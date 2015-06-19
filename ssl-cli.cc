@@ -1,7 +1,4 @@
-#include <handy/handy.h>
-#include <handy/daemon.h>
 #include "ssl-conn.h"
-#include <handy/http.h>
 
 using namespace handy;
 using namespace std;

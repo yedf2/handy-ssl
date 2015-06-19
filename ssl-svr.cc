@@ -1,5 +1,3 @@
-#include <handy/handy.h>
-#include <handy/daemon.h>
 #include "ssl-conn.h"
 
 using namespace handy;

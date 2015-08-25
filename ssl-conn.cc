@@ -77,7 +77,7 @@ int SSLConn::handleHandshake(const TcpConnPtr& con) {
         fatalif(ssl_ == NULL, "SSL_new failed");
         int r = SSL_set_fd(ssl_, channel_->fd());
         fatalif(!r, "SSL_set_fd failed");
-        if (isClient_) {
+        if (isClient()) {
             trace("SSL_set_connect_state for channel %ld fd %d", (long)channel_->id(), channel_->fd());
             SSL_set_connect_state(ssl_);
         } else {
